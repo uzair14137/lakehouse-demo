@@ -7,10 +7,10 @@ E-commerce teams outgrow flat S3/MinIO folders. They need ACID tables, time trav
 ```mermaid
 flowchart TD
   subgraph Metadata
-    Nessie[(Project Nessie)] --> Postgres[(Postgres)]
+    Nessie[(Project Nessie)] --> Postgres[(PostgreSQL 16)]
   end
-  Spark ==writes==> MinIO[(MinIO Object Store)]
+  Spark["Spark 3.5 (Driver + Workers)"] -->|writes Iceberg files| MinIO[(MinIO Object Store)]
   Spark --> Nessie
-  Spark --> IceCat[(Iceberg Catalog)]
-  Trino --> IceCat
+  Trino["Trino 448"] --> Nessie
+
 
