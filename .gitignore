@@ -6,5 +6,5 @@ warehouse/
 __pycache__/
 .idea/
 .vscode/
-warehouse/*
+warehouse
 spark-warehouse
