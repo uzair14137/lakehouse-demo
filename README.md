@@ -5,10 +5,4 @@ E-commerce teams outgrow flat S3/MinIO folders. They need ACID tables, time trav
 
 ## 2 · Architecture
 <!-- Mermaid diagram will render on GitHub -->
-```mermaid
-flowchart TD
-  Spark -->|writes| MinIO[(MinIO Object Store)]
-  Spark --> IceCat[(Iceberg Catalog)]
-  Trino --> IceCat
-
-
+mermaid<br>flowchart TD<br> subgraph Metadata\n Nessie[(Project Nessie)]-->Postgres[(Postgres)]\n end<br> Spark ==writes==> MinIO[(MinIO Object Store)]<br> Spark --> Nessie<br> Spark --> IceCat[(Iceberg Catalog)]<br> Trino --> IceCat<br>
