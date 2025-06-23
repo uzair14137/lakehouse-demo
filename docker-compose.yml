@@ -1,0 +1,54 @@
+services:
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-05-24T17-08-30Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - ./warehouse:/data
+    ports: ["9000:9000", "9001:9001"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/ready"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: nessie
+      POSTGRES_PASSWORD: nessie
+      POSTGRES_DB: nessie
+    ports: ["5434:5432"]
+
+  nessie:
+    image: ghcr.io/projectnessie/nessie:0.104.2-java
+    depends_on: [postgres]
+    environment:
+      NESSIE_DB_URI: jdbc:postgresql://postgres:5432/nessie
+      NESSIE_DB_USERNAME: nessie
+      NESSIE_DB_PASSWORD: nessie
+    ports: ["19120:19120"]
+
+  spark:
+    image: bitnami/spark:3.5.1
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_EXTRA_CLASSPATH=/opt/iceberg/lib/*
+    volumes:
+      - ./scripts:/opt/bitnami/spark/scripts           # ingest code
+      - ./spark/jars:/opt/iceberg/lib                  # Iceberg + Nessie jars
+      - ./warehouse:/warehouse                         # Iceberg files
+      - ./data:/workspace                     # Iceberg warehouse
+    depends_on: [ minio, nessie ]
+    ports: [ "7077:7077", "8080:8080" ]
+
+  trino:
+    image: trinodb/trino:448
+    depends_on: [minio, nessie]
+    ports: ["8082:8080"]
+    volumes:
+      - ./trino/catalog:/etc/trino/catalog

@@ -1,3 +1,4 @@
 data/raw/*
 .env
 data/raw/* .env warehouse/ __pycache__/ .idea/ .vscode/
+warehouse/, spark-warehouse/, .env
