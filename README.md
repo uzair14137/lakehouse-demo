@@ -25,14 +25,14 @@ flowchart TD
 | **Back to zero changed rows** | ![Snapshot 3](snapshots/rollback.png)                                                                                             |
 
 ## 4 · Cost / Performance
--- full scan
-EXPLAIN ANALYZE SELECT count(*) FROM rr_events;
--- physicalInputDataSize = 15.9 GB
+-- full scan<br>
+EXPLAIN ANALYZE SELECT count(*) FROM rr_events;--<br>
+physicalInputDataSize = 15.9 GB
 
--- partition-pruned
+-- partition-pruned<br>
 EXPLAIN ANALYZE
 SELECT count(*) FROM rr_events
-WHERE  event_type = 'transaction';
+WHERE  event_type = 'transaction';<br>
 -- physicalInputDataSize = 0.63 GB
 | Query                        | Data scanned | % of full |
 | ---------------------------- | ------------ | --------- |
