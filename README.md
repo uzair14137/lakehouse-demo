@@ -14,3 +14,12 @@ flowchart TD
   Trino["Trino 448"] --> Nessie
 
 
+Before update – screenshot $snapshots table (one snapshot).
+
+Update command – short code block.
+
+After update – screenshot $snapshots (two snapshots) & count = 100.
+
+Rollback call – code block + count = 0 screenshot.
+
+One-liner “Why it matters” (instant revert for data bugs).

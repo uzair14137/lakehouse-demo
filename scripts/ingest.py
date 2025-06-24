@@ -50,3 +50,4 @@ df = (
    .createOrReplace())
 
 spark.stop()
+# docker exec -it lakehouse-demo-spark-1 /opt/bitnami/spark/scripts/ingest.sh
